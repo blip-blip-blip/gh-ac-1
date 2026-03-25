@@ -1,0 +1,43 @@
+name: PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: write
+  models: read
+
+env:
+  MAX_INPUT_TOKENS: "8000"
+  MAX_OUTPUT_TOKENS: "1000"
+  GITHUB_MODEL: "gpt-4o"
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: |
+          uv pip install -e agents/core --system
+          uv pip install -e agents/pr_review --system
+          uv pip install -e agents/fix --system
+
+      - name: Run PR review
+        run: python -m agents.pr_review.service
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

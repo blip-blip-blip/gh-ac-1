@@ -1,0 +1,13 @@
+[project]
+name = "gh-ac-reporting"
+version = "0.1.0"
+description = "Trend reporting for the AI-DLC GitHub Agent"
+requires-python = ">=3.12"
+dependencies = ["gh-ac-core"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

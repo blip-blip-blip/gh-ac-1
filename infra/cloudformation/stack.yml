@@ -1,0 +1,4 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  CloudFormation stack placeholder — to be defined if CloudFormation
+  is preferred over Terraform for specific AWS resources.

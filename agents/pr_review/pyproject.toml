@@ -1,0 +1,18 @@
+[project]
+name = "gh-ac-pr-review"
+version = "0.1.0"
+description = "PR review pipeline for the AI-DLC GitHub Agent"
+requires-python = ">=3.12"
+dependencies = [
+    "gh-ac-core",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-mock>=3.12"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

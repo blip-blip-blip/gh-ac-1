@@ -1,0 +1,41 @@
+name: Issue Triage
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+  contents: read
+  models: read
+
+env:
+  MAX_INPUT_TOKENS: "8000"
+  MAX_OUTPUT_TOKENS: "1000"
+  GITHUB_MODEL: "gpt-4o"
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: |
+          uv pip install -e agents/core --system
+          uv pip install -e agents/issue_triage --system
+
+      - name: Run issue triage
+        run: python -m agents.issue_triage.service
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
