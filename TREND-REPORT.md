@@ -2,28 +2,28 @@
 
 **Repository**: `blip-blip-blip/gh-ac-1`  
 **Period**: last 7 days  
-**Issues triaged**: 3  
-**PRs reviewed**: 0
+**Issues triaged**: 0  
+**PRs reviewed**: 3
 
 
 ## Issue Triage
+_No issues triaged this week._
 
-### By Type
-
-| Type | Count |
-|---|---|
-| Unknown | 3 |
-
-### By Severity
-
-| Severity | Count |
-|---|---|
-| 🔴 Critical | 6 |
-| 🟠 High | 1 |
-| 🟢 Low | 2 |
 
 ## PR Reviews
-_No PRs reviewed this week._
+
+- **PRs reviewed**: 3
+- **Auto-approved (no findings)**: 1
+- **Total findings**: 9
+- **Average findings per PR**: 3.0
+- **Automated fix PRs opened**: 0
+
+
+## Most Common Rule Violations
+
+| Rule | Violations |
+|---|---|
+| `SECURITY-07` | 7 |
 
 
 ---
