@@ -18,7 +18,7 @@ env:
 jobs:
   review:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,16 +28,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install uv
-        run: pip install uv
-
       - name: Install dependencies
-        run: |
-          uv pip install -e agents/core --system
-          uv pip install -e agents/pr_review --system
-          uv pip install -e agents/fix --system
+        run: pip install requests
 
       - name: Run PR review
         run: python -m agents.pr_review.service
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHONPATH: ${{ github.workspace }}

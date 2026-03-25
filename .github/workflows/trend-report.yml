@@ -28,15 +28,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install uv
-        run: pip install uv
-
       - name: Install dependencies
-        run: |
-          uv pip install -e agents/core --system
-          uv pip install -e agents/reporting --system
+        run: pip install requests
 
       - name: Run trend reporter
         run: python -m agents.reporting.service
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHONPATH: ${{ github.workspace }}
