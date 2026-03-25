@@ -12,7 +12,7 @@ permissions:
 
 env:
   MAX_INPUT_TOKENS: "8000"
-  MAX_OUTPUT_TOKENS: "1000"
+  MAX_OUTPUT_TOKENS: "4000"
   GITHUB_MODEL: "gpt-4o"
 
 jobs:
