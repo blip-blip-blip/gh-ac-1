@@ -2,13 +2,17 @@
 
 **Repository**: `blip-blip-blip/gh-ac-1`  
 **Period**: last 7 days  
-**Issues triaged**: 0  
+**Issues triaged**: 1  
 **PRs reviewed**: 0
 
 
 ## Issue Triage
-_No issues triaged this week._
 
+### By Type
+
+| Type | Count |
+|---|---|
+| Unknown | 1 |
 
 ## PR Reviews
 _No PRs reviewed this week._
