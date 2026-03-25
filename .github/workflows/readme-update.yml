@@ -1,0 +1,49 @@
+name: Update README
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'agents/**'
+      - '.github/workflows/**'
+      - 'infra/**'
+
+permissions:
+  contents: write
+  models: read
+
+env:
+  GITHUB_MODEL: "gpt-4o"
+  MAX_OUTPUT_TOKENS: "2000"
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Skip commits that are themselves README auto-updates (loop guard)
+    if: "!contains(github.event.head_commit.message, '[skip readme]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Get changed files
+        id: changed
+        run: |
+          FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | tr '\n' '\n')
+          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
+          echo "$FILES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Run README updater
+        run: python -m agents.readme_updater.service
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHONPATH: ${{ github.workspace }}
