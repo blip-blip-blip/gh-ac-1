@@ -88,9 +88,14 @@ class Linker:
             if AGENT_COMMENT_MARKER not in body:
                 continue
 
-            # Determine kind from context (issue vs PR comment)
-            kind = "issue" if comment.get("pull_request_url") is None else "pr"
-            number = comment.get("issue_number", 0)
+            # html_url contains "/pull/" for PR comments, "/issues/" for issues
+            html_url = comment.get("html_url", "")
+            kind = "pr" if "/pull/" in html_url else "issue"
+
+            # Extract number from issue_url: ".../issues/7" → 7
+            issue_url = comment.get("issue_url", "")
+            number = int(issue_url.rstrip("/").split("/")[-1]) if issue_url else 0
+
             results.append(CommentData(kind, number, body))
 
         return results
