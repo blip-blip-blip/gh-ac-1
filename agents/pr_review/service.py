@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, wait
 
 from agents.core.orchestrator import parse_event
@@ -50,11 +51,15 @@ def run() -> None:
         (TestCoverageAgent(client), (pr,)),
     ]
 
+    def _staggered_submit(executor, agent, args, delay):
+        time.sleep(delay)
+        return executor.submit(agent.run, *args)
+
     results = {}
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = {
-            executor.submit(agent.run, *args): agent.agent_type
-            for agent, args in agents_and_args
+            _staggered_submit(executor, agent, args, i * 2): agent.agent_type
+            for i, (agent, args) in enumerate(agents_and_args)
         }
         done, _ = wait(futures, timeout=240)
         for future in done:
