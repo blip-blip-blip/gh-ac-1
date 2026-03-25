@@ -21,6 +21,10 @@ class PRAggregator:
         print(f"[pr_review] Review submitted: {event} with "
               f"{len(all_findings)} finding(s)")
 
+        # Post a summary comment so the Trend Reporter can find it via
+        # the issue comments feed (PR reviews are on a separate endpoint)
+        self.client.post_comment(pr.number, self._build_summary_comment(all_findings, event))
+
         # Trigger fix pipeline for findings that have fix_code
         if self.fix_service:
             fixable = [f for f in all_findings if f.get("fix_code")]
@@ -91,6 +95,29 @@ class PRAggregator:
             lines.append(f"\n⚠️ Note: {', '.join(failed)} agent(s) did not complete. "
                          f"See Actions log for details.")
 
+        return "\n".join(lines)
+
+
+    def _build_summary_comment(self, findings: list[dict], event: str) -> str:
+        """Compact summary comment containing AGENT_COMMENT_MARKER for trend reporting."""
+        sev_counts = {}
+        rules = []
+        for f in findings:
+            sev = f.get("severity", "low")
+            sev_counts[sev] = sev_counts.get(sev, 0) + 1
+            if rule := f.get("rule_id"):
+                rules.append(rule)
+
+        lines = [
+            AGENT_COMMENT_MARKER,
+            f"**AI-DLC PR Review summary**: {event}  ",
+            f"**Findings**: {len(findings)}  ",
+        ]
+        for sev, emoji in [("critical", "🔴"), ("high", "🟠"), ("medium", "🟡"), ("low", "🟢")]:
+            if n := sev_counts.get(sev):
+                lines.append(f"{emoji} **{sev.capitalize()}**: {n}  ")
+        if rules:
+            lines.append(f"**Rules**: {', '.join(rules)}  ")
         return "\n".join(lines)
 
 
