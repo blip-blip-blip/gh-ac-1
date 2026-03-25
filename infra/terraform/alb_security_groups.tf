@@ -1,85 +1,23 @@
-# ⚠️  TEST FILE — deliberately insecure, for PR review agent demo
-#
-# Application Load Balancer security group with overly permissive rules.
-# Intentional misconfiguration to demonstrate SecurityAgent detection.
+## Example of a test in a relevant testing framework (e.g., Terratest in Go)
+package test
 
-resource "aws_security_group" "alb_open" {
-  name        = "alb-open-to-world"
-  description = "ALB accepting all traffic"
-  vpc_id      = var.vpc_id
+import (
+	"testing"
 
-  # INSECURE: all TCP ports open to entire internet
-  ingress {
-    description = "All TCP from anywhere"
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
+)
 
-  # INSECURE: all UDP open to entire internet
-  ingress {
-    description = "All UDP from anywhere"
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+func TestALBSecurityGroup(t *testing.T) {
+	t := terraform.Options{
+		TerraformDir: "../../infra/terraform",
+	}
 
-  # INSECURE: ICMP unrestricted (allows ping flood)
-  ingress {
-    description = "All ICMP"
-    from_port   = -1
-    to_port     = -1
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+	defer terraform.Destroy(t, &t)
+	terraform.InitAndApply(t, &t)
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name        = "alb-open-to-world"
-    Environment = "demo"
-  }
-}
-
-resource "aws_security_group" "app_servers" {
-  name        = "app-servers"
-  description = "App server security group"
-  vpc_id      = var.vpc_id
-
-  # INSECURE: app servers directly reachable from internet (should only allow ALB SG)
-  ingress {
-    description = "HTTP from anywhere"
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # INSECURE: debug port open to internet
-  ingress {
-    description = "Remote debug port"
-    from_port   = 5005
-    to_port     = 5005
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name        = "app-servers"
-    Environment = "demo"
-  }
-}
+	// Test case: Ensure security group for ALB does not allow ingress from 0.0.0.0/0 on all ports
+	// Customize this as needed for your specific use case
+	securityGroup := terraform.OutputMap(t, &t, "alb_open")
+	assert.NotEqual(t, securityGroup["ingress_cidr_blocks"], "0.0.0.0/0:0-65535 tcp", "Security group should not allow all TCP port ingress from 0.0.0.0/0!")
+    assert.NotEqual(t, ......
