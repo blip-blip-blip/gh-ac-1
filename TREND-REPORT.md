@@ -2,7 +2,7 @@
 
 **Repository**: `blip-blip-blip/gh-ac-1`  
 **Period**: last 7 days  
-**Issues triaged**: 1  
+**Issues triaged**: 3  
 **PRs reviewed**: 0
 
 
@@ -12,7 +12,15 @@
 
 | Type | Count |
 |---|---|
-| Unknown | 1 |
+| Unknown | 3 |
+
+### By Severity
+
+| Severity | Count |
+|---|---|
+| 🔴 Critical | 6 |
+| 🟠 High | 1 |
+| 🟢 Low | 2 |
 
 ## PR Reviews
 _No PRs reviewed this week._
