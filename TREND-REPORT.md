@@ -1,14 +1,24 @@
-# AI-DLC Weekly Trend Report — 2026-03-25
+# AI-DLC Weekly Trend Report — 2026-03-30
 
 **Repository**: `blip-blip-blip/gh-ac-1`  
 **Period**: last 7 days  
-**Issues triaged**: 0  
+**Issues triaged**: 1  
 **PRs reviewed**: 3
 
 
 ## Issue Triage
-_No issues triaged this week._
 
+### By Type
+
+| Type | Count |
+|---|---|
+| Bug | 1 |
+
+### By Severity
+
+| Severity | Count |
+|---|---|
+| 🟠 High | 1 |
 
 ## PR Reviews
 
